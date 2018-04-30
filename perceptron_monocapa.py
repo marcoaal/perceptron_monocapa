@@ -6,7 +6,7 @@
 	2018-2
 '''
 
-from numpy import dot,array,isscalar,array_equal
+from numpy import dot,array,isscalar,array_equal,multiply,outer
 from csv import reader
 
 def cargarCsv(archivo):
@@ -58,6 +58,11 @@ while (int(num_ejercicio)<1 or int(num_ejercicio)>4):
 		nombre_archivo = 'ejercicio_1.csv'
 		w = array([-7,-5])
 		bias = 4
+		'''
+		nombre_archivo = 'ejercicio_prueba.csv'
+		w = array([0,0])
+		bias = 0
+		'''		
 	elif int(num_ejercicio) == 2:
 		print("\n----- Ejercicio 2 -----\n")
 		nombre_archivo = 'ejercicio_2.csv'
@@ -70,14 +75,14 @@ while (int(num_ejercicio)<1 or int(num_ejercicio)>4):
 		bias = array([4,4])
 	elif int(num_ejercicio) == 4:
 		print("\n----- Ejercicio 4 -----\n")
-		nombre_archivo = 'ejercicio_1.csv'
+		nombre_archivo = 'ejercicio_4.csv'
 		w = array([[3,-3],[-3,3]])
 		bias = array([-3,3])
 
 datos_entrenamiento = cargarCsv(nombre_archivo)
 lista_errores = []
 
-iteraciones_max = 1000
+iteraciones_max = 100
 numero_aciertos = 0
 iteraciones = 0
 pos = 0
@@ -94,7 +99,7 @@ while (numero_aciertos < len(datos_entrenamiento) and iteraciones < iteraciones_
 		if a_resultante != objetivo:
 			error = objetivo - a_resultante
 			lista_errores.append(error)
-			w = w + (error * p.transpose())
+			w = w + (error * p)
 			bias = bias + error
 			numero_aciertos = 0
 		else:
@@ -103,17 +108,16 @@ while (numero_aciertos < len(datos_entrenamiento) and iteraciones < iteraciones_
 		if not array_equal(a_resultante,objetivo):
 			error = objetivo - a_resultante
 			lista_errores.append(error)
-			w = w + (error * p.transpose())
+			w = w + outer(error.T,p)
 			bias = bias + error
 			numero_aciertos = 0
 		else:
 			numero_aciertos = numero_aciertos + 1
 	iteraciones = iteraciones + 1
-	
 
-print("Pesos finales")
+print("----- Pesos Finales -----")
 print(w)
-print("Bias final")
+print("----- Bias Final -----")
 print(bias)
-print("No. total de iteraciones")
+print("----- No. Total De Iteraciones -----")
 print(iteraciones)
